@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'clientes/css/clientes.css' %}">
+{% endblock %}
+
+
+
+{% block 'dashboard' %}
+
+<div class="row">
+    <div class="col-md text-center cabecalho">
+        <p> Capa </p>
+    </div>
+    <div class="col-md text-center cabecalho">
+        <p> Título </p>
+    </div>
+    <div class="col-md text-center cabecalho">
+        <p> Sinopse </p>
+    </div>
+    <div class="col-md text-center cabecalho">
+        <p> Quantidade </p>
+    </div>
+    <div class="col-md text-center cabecalho">
+        <p>Ações</p>
+    </div>
+</div>
+
+<br>
+
+    {%for dvd in lista%}
+        {%if dvd.quantidade > 0%}
+            <div class="row">
+                
+                <div class="col-md text-center">
+                    <img src="{% static dvd.caminho_imagem %}" width="80px" height="70px" alt="capa do filme {{dvd.titulo}}">
+                </div>
+                <div class="col-md text-center">
+                    <p> {{dvd.titulo}} </p>
+                </div>
+                <div class="col-md text-center">
+                    <p> {{dvd.sinopse}} </p>
+                </div>
+                <div class="col-md text-center">
+                    <p> {{dvd.quantidade}} </p>
+                </div>
+                <div class="col-md text-center">
+                    <form action="{% url 'remover-dvd'%}" method="POST">{% csrf_token %}
+                        <input type="hidden" name="id" value="{{dvd.id}}" />
+                        <input type="submit" value="alugar" class="btn btn-success"/>
+                    </form>
+                </div>
+                 
+            </div>
+            <br>
+        {%endif%}
+    {% endfor %}
+    
+
+
+
+
+    <script src="{% static 'clientes/js/clientes.js' %}"></script>
+{% endblock%}

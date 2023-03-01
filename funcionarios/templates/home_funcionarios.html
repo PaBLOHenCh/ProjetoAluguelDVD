@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'funcionarios/css/funcionarios.css'%}">
+{% endblock %}
+
+{% block 'dashboard' %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md card-dashboard">
+                <button type="submit" class="btn btn-primary" onClick="showorhide()">Adicionar DVD</button>
+            </div>
+            <script type="text/javascript">
+                function showorhide() {
+                    var x = document.getElementById('adicionar-dvd');
+                    if (x.style.display == 'none') {
+                        x.style.display = 'block';
+                    } else {
+                        x.style.display = 'none';
+                    }
+                
+                }
+            </script>
+
+            <div class="col-md card-dashboard" > 
+                <a type="submit" class="btn btn-primary" href="{% url "consulta-estoque"%}">Exibir DVD's em estoque</a>
+            </div> 
+
+        </div>
+
+        <div id="adicionar-dvd">
+            <form action="{% url  'adicionar-dvd' %}" method="POST" >{% csrf_token %}
+                <div class="row">
+                    <div class="col-md">
+                        <p>Título:</p>
+                        <input type="text" class="form-control" placeholder="Digite o título do dvd" name="titulo" value="{{titulo}}">
+                    </div>
+                    <div class="col-md">
+                        <p>Quantidade:</p>
+                        <input type="number" class="form-control" placeholder="Quantidade e estoque" name="quantidade" value="{{quantidade}}">
+                    </div>
+                </div>
+                <br>
+                <p>Sinopse:</p>
+                <input type="text" class="form-control" placeholder="Digite aqui a sinopse do dvd " name="sinopse" value="{{sinopse}}">
+                <br>
+                <p>Imagem ("<i>nome_da_imagem</i>.png"):</p>
+                <input type="text" class="form-control" placeholder="Digite aqui o nome da imagem" name="caminho_imagem" value="{{caminho_imagem}}">
+                <br>
+                <input type="submit" value="Cadastrar" class="btn-principal">
+
+            </form>
+
+        </div>
+    </div>
+
+    <script src="{% static 'funcionarios/js/funcionarios.js' %}"></script>
+    
+{% endblock%}
