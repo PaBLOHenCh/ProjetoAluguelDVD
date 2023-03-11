@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'clientes/css/clientes.css' %}">
+{% endblock %}
+
+
+
+{% block 'dashboard' %}
+
+<div class="row col-12">
+    <h3>Alugueis de {{request.user}}</h3>
+</div>
+
+<div class="row col-md-12">
+    <div class="row col-md-9">    
+        <div class="col-md text-center cabecalho">
+            <p> Capa </p>
+        </div>
+        <div class="col-md text-center cabecalho">
+            <p> Título </p>
+        </div>
+        <div class="col-md text-center cabecalho">
+            <p> Sinopse </p>
+        </div>
+    </div>
+    <div class="row col-md-3">
+        <div class="col-md text-center cabecalho">
+            <p>Ações</p>
+        </div>
+    </div>
+</div>
+
+<br>
+<div class="row col-md-12">
+    <div class="row col-md-9" style="justify-content: space-around;">
+    {% for dvd in dvds %}
+        <div class="row col-md-12 mb-3">
+            <div class="col-md-4 text-center">
+                <img src="{% static dvd.caminho_imagem %}" width="80px" height="70px" alt="capa do filme {{dvd.titulo}}">
+            </div>
+            <div class="col-md-4 text-center">
+                <p> {{dvd.titulo}} </p>
+            </div>
+            <div class="col-md-4 text-center">
+                <p> {{dvd.sinopse}} </p>
+            </div>
+        </div>
+        <br>
+    {%endfor%}
+    </div>
+    <div class="row col-md-3">
+    {%for aluguel in alugueis%}  
+        <div class="col-md-12 mb-3">
+            <div class="col-md text-center">
+                <form action="{% url 'devolver-dvd'%}" method="POST">{% csrf_token %}
+                    <input type="hidden" name="id" value="{{aluguel.id}}" />
+                    <input type="submit" value="devolver" class="btn btn-danger"/>
+                </form>
+            </div>
+        </div>    
+        <br>
+    {% endfor %}
+    </div>
+
+    
+
+
+
+
+    <script src="{% static 'clientes/js/clientes.js' %}"></script>
+{% endblock%}

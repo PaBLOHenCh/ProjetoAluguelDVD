@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'clientes/css/clientes.css' %}">
+{% endblock %}
+
+
+{% block 'dashboard' %}
+
+    <div class="container">
+        <div class="text-center">
+            <h3 class="title" style = "font-weight: bold">Cadastro de Cliente</h3>    
+        </div>
+        <form action="{%url 'cadastro-cliente'%}" method="POST"> {%csrf_token%}
+                <div class="row">
+                    <div class="col-6">
+                    <input class="form-control" type="text" name="primeiro_nome" placeholder="Primeiro Nome" id='primeiro_nome'/>
+                    </div>
+                    <br>
+                    <div class="col-6">
+                        <input class="form-control" type="text" name="ultimo_nome" placeholder="Sobrenome" id='ultimo_nome'/>
+                    </div>
+                    <br>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <input class="form-control" type="email" name="email" placeholder="Email" id='e-mail'/>
+                    </div>
+                    <br>
+                    <div class="col-6">
+                        <input class="form-control" type="password" name="senha" placeholder="Senha" id='senha'/>
+                    </div>
+                    <br>
+                    
+                </div>
+                <input type='submit' value='Cadastrar Cliente' class="btn btn-success" style="margin-top: 20px" />
+        </form>
+
+    </div>
+
+{% endblock %}
+
+<script src="{% static 'clientes/js/clientes.js' %}"></script>

@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 import os 
 
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'rest.settings')
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -41,6 +44,8 @@ INSTALLED_APPS = [
     'clientes',
     'funcionarios',
     'dvds',
+    'usuarios',
+    'rolepermissions',
 ]
 
 MIDDLEWARE = [
@@ -130,3 +135,14 @@ MEDIA_URL = "/media/"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#auth configs
+
+AUTH_USER_MODEL = 'usuarios.Users'
+
+#role permissions
+ROLEPERMISSIONS_MODULE = 'aplicacaoDvd.roles'
+
+ROLEPERMISSIONS_REDIRECT_TO_LOGIN = 'google.com'
+
+

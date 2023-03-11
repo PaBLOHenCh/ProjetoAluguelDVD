@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'clientes/css/clientes.css' %}">
+{% endblock %}
+
+
+{% block 'dashboard' %}
+
+    <div class="container">
+        <div class="text-center">
+            <h3 class="title" style = "font-weight: bold">Confirmação de pagamento do aluguel {{aluguel.nome}}</h3>    
+        </div>
+        <form action="{%url 'efetivar-pagamento-dvd'%}" method="POST"> {%csrf_token%}
+                <div class="col-md-3" style="position: relative; justify-content: center;">
+                    <div class="col-md-10">
+                        <p>{{cliente.first_name}} {{cliente.last_name}}, Você ficou por {{tempo_aluguel}} minutos com o o dvd {{nome_dvd}}. Totalizando o valor de R$ {{valor_aluguel}}</p>
+                    </div>
+                    <br>
+                    <div class="col-md-10">
+                        Muito obrigado por escolher a locadora Vin Diesel! S2
+                    </div>
+                    <br>
+                    <div class="col-md-3">
+                        <input type="hidden" name="id" value="{{aluguel.id}}"/>
+                        <input type='submit' value='Pagar' class="btn btn-success" style="margin-top: 20px" />
+                    </div>
+                </div>
+                
+        </form>
+
+    </div>
+
+{% endblock %}
+
+<script src="{% static 'clientes/js/clientes.js' %}"></script>
