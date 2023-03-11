@@ -51,16 +51,13 @@ def remover_dvd(request):
     Aluguel.save()
     if dvd.quantidade < 0:
         DVD.objects.filter(id = id).delete
-    return render(request, 'aluguel.html', {'dvd' : dvd})
-
-def inicializa_lista_espera(id):
-    
-    DVD.objects.filter(pk=id).update(lista_espera_dvd = [])
-    
+    return render(request, 'aluguel.html', {'dvd' : dvd})    
 
 @has_permission_decorator('inserir_lista_espera', redirect_to_login= '/clientes/login-cliente')
 def inserir_lista_espera(request):
     dvd = get_object_or_404(DVD, pk = request.POST.get('id'))
+    if lista_espera.objects.filter(cliente = request.user, dvd = dvd):
+        return HttpResponse('Voce já esta na lista de espera para {}'.format(dvd.titulo))
     lista = lista_espera(
         cliente = request.user,
         dvd = dvd,
