@@ -9,6 +9,8 @@ from rolepermissions.decorators import has_permission_decorator
 from .models import aluguel, lista_espera
 from usuarios.models import Users
 from django.contrib.auth.decorators import login_required
+from .models import lista_espera
+from django.core.mail import send_mail
 
 @has_permission_decorator('adicionar_dvd')
 def adicionar_dvd(request):
@@ -36,11 +38,10 @@ def adicionar_dvd(request):
     return render(request, 'cadastro.html', {'dvd': Dvd})
 
     
-@has_permission_decorator('remover_dvd')
+@has_permission_decorator('remover_dvd', redirect_to_login= '/clientes/login-cliente')
 def remover_dvd(request):
-    id_dvd = request.POST.get('id')
-    DVD.objects.filter(id = id_dvd).update(quantidade = F('quantidade') - 1)
-    dvd = get_object_or_404(DVD, pk=id_dvd)
+    DVD.objects.filter(id = request.POST.get('id')).update(quantidade = F('quantidade') - 1)
+    dvd = get_object_or_404(DVD, pk=request.POST.get('id'))
     cliente = get_object_or_404(Users, username = request.user)
     Aluguel = aluguel (
         id_dvd = dvd,
@@ -49,6 +50,12 @@ def remover_dvd(request):
         data_aluguel = datetime.now(),
     )
     Aluguel.save()
+    
+    lista = lista_espera.objects.filter(dvd = dvd)
+    for obj in lista:
+        if obj.cliente == cliente:
+            lista_espera.objects.filter(cliente=obj.cliente, dvd=dvd).delete()
+    
     if dvd.quantidade < 0:
         DVD.objects.filter(id = id).delete
     return render(request, 'aluguel.html', {'dvd' : dvd})    
@@ -89,7 +96,17 @@ def devolver_dvd(request):
         'nome_dvd' : Aluguel.id_dvd.titulo,
         'valor_aluguel' : valor_aluguel,
     }
-    DVD.objects.filter(pk = Aluguel.id_dvd.id).update(quantidade = F('quantidade') + 1)
+    
+    if Aluguel.id_dvd.quantidade == 0:
+        lista = lista_espera.objects.filter(dvd = Aluguel.id_dvd)
+        lista_cliente = lista_email = []
+        for obj in lista:
+            lista_cliente.append(obj.cliente)
+        # for cliente in lista_cliente:
+        #     lista_email.append(cliente.email)
+            
+        send_mail('Reverva na Locadora Vin Diesel','O DVD {} que você esta a espera, já esta disponível no site. Corra antes q acabe'.format(Aluguel.id_dvd),'pablohenriquechaves2101@outlook.com', lista_cliente)
+
     return render(request, 'pagamento.html', context)
 
 
@@ -97,6 +114,8 @@ def devolver_dvd(request):
 def efetivar_pagamento_dvd(request):
     Aluguel = aluguel.objects.filter(pk =request.POST.get('id'))
     Aluguel.update(aluguel_dvd_pago = True)
+    _aluguel = get_object_or_404(aluguel, pk = request.POST.get('id'))
+    DVD.objects.filter(pk = _aluguel.id_dvd.id).update(quantidade = F('quantidade') + 1)
     asyncio.sleep(60)
     Aluguel.delete()
     return render(request, 'confirmacao_pagamento.html')

@@ -6,7 +6,8 @@ from rolepermissions.decorators import has_permission_decorator
 from django.urls import reverse
 from django.contrib import auth
 from dvds.models import aluguel
-from django.core.mail import send_mail
+
+
 
 from dvds.models import DVD
 
@@ -75,6 +76,6 @@ def dvds_alugados(request):
     return render(request, 'alugueis.html', context)
 
 
-def teste_email(request):
-    send_mail('Assunto', 'Esse é um email de teste', 'pablohenriquechaves2101@outlook.com', ['pablohenriquechaves2101@gmail.com'])
-    return HttpResponse('sucesso')
+# def teste_email(request):
+#     send_mail('Assunto', 'Esse é um email de teste', 'pablohenriquechaves2101@outlook.com', ['pablohenriquechaves2101@gmail.com'])
+#     return HttpResponse('sucesso')
